@@ -1,10 +1,12 @@
 package routers
 
 import (
-	"github.com/beego/beego/v2/server/web"
 	"main/src/controllers"
+
+	"github.com/beego/beego/v2/server/web"
 )
 
 func init() {
-	web.Router("/", &controllers.MainController{})
+	web.Router("/", &controllers.IndexController{})
+	web.Router("/v1/new_request/", &controllers.NewRequestController{})
 }
