@@ -19,7 +19,7 @@ jobs:
         run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend stop
 
       - name: Remove old container
-        run: doercker-compose -f docker-compose.deploy.yml -p justmark0me_backend rm -f
+        run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend rm -f
 
       # Build containers
       - run: |
