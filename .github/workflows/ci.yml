@@ -19,10 +19,10 @@ jobs:
           go-version: 1.17
 
       - name: Stop previous containers
-        run: docker-compose -f docker-compose.deploy.yaml -p justmark0me_backend stop
+        run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend stop
 
       - name: Remove old container
-        run: doercker-compose -f docker-compose.deploy.yaml -p justmark0me_backend rm -f
+        run: doercker-compose -f docker-compose.deploy.yml -p justmark0me_backend rm -f
 
       - name: Build docker container
       - run: |
@@ -33,7 +33,7 @@ jobs:
 
 
       - name: Run service
-        run: docker-compose -f docker-compose.deploy.yaml -p justmark0me_backend up -d
+        run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend up -d
 
 #      - name: Test
 #        run: go test -v ./...
