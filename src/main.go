@@ -7,8 +7,7 @@ import (
 	_ "main/src/routers"
 	"os"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/plugins/cors"
+	"github.com/beego/beego/v2/server/web/filter/cors"
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web"
@@ -28,11 +27,11 @@ func main() {
 		log.Fatal("Cannot connect to database.\nQUITTING.\nREASON:", err)
 	}
 	// CORS allow all
-	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+	web.InsertFilter("*", web.BeforeRouter, cors.Allow(&cors.Options{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
-		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"access-token", "Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
 		AllowCredentials: true,
 	}))
 
