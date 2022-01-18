@@ -22,6 +22,7 @@ func GetIPInfo(ip string) (IPInfo, error) {
 	body, _ := req.Bytes()
 	data := IPInfo{}
 	err := json.Unmarshal(body, &data)
+	log.Println("Got info: ", data)
 	if err != nil {
 		log.Println("Could not map structure and response of get ip info. Error:", err)
 	}
