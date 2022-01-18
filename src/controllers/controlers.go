@@ -27,13 +27,11 @@ type NewRequestController struct {
 
 // Get method of new request endpoint
 func (c *NewRequestController) Get() {
-	log.Println("request info about ip")
 	ipInfo, err := services.GetIPInfo(c.Ctx.Input.IP())
 	if err != nil {
-		log.Println("ERROR:", err)
+		log.Println("Could not get info about ip:", err)
 	}
 	o := orm.NewOrm()
-	log.Println("Creating request info from data")
 	request := models.RequestInfo{
 		IP:             c.Ctx.Input.IP(),
 		Os:             services.GetOsTypeFromUserAgent(c.Ctx.Input.Header("User-Agent")),
