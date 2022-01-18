@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:alpine3.14
     ports:
-      - 127.0.0.1:5432:5432
+      - 0.0.0.0:5432:5432
     command: postgres -c log_statement=all
     volumes:
       - postgres:/var/lib/postgresql/data

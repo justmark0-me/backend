@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  nginx_backend:
+    image: justmark0me_backend_nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+    networks:
+      - web
+      - project
+    environment:
+      VIRTUAL_HOST: api.justmark0.me
+      LETSENCRYPT_HOST: api.justmark0.me
+      LETSENCRYPT_EMAIL: developer@justmark0.me
+
+  backend:
+    image: justmark0me_backend:latest
+    restart: always
+    environment:
+      - POSTGRES_CONNECTION_CONFIGURATION=$POSTGRES_CONNECTION_CONFIGURATION
+    ports:
+      - 8080
+    networks:
+      - project
+
+networks:
+  web: # external network for hostname access
+    external:
+      name: web
+  project: # internal network for project
