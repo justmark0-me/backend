@@ -36,7 +36,7 @@ func (c *NewRequestController) Get() {
 	log.Println("Creating request info from data")
 	request := models.RequestInfo{
 		IP:             c.Ctx.Input.IP(),
-		Os:             "TBA",
+		Os:             services.GetOsTypeFromUserAgent(c.Ctx.Input.Header("User-Agent")),
 		Country:        ipInfo.Country,
 		Region:         ipInfo.Region,
 		City:           ipInfo.City,
