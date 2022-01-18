@@ -76,7 +76,7 @@ func (c *NewBulkAddIPAddresses) Post() {
 		}
 		o := orm.NewOrm()
 		request := models.RequestInfo{
-			IP:             c.Ctx.Input.IP(),
+			IP:             ip,
 			Os:             "",
 			Country:        ipInfo.Country,
 			Region:         ipInfo.Region,
