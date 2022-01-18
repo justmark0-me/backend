@@ -24,13 +24,12 @@ jobs:
       - name: Remove old container
         run: doercker-compose -f docker-compose.deploy.yml -p justmark0me_backend rm -f
 
-      - name: Build docker container
+      # Build containers
       - run: |
           docker build -t justmark0me_backend -f deploy/go/Dockerfile .
           docker tag justmark0me_backend justmark0me_backend:latest
           docker build -t justmark0me_backend_nginx -f deploy/nginx/Dockerfile .
           docker tag justmark0me_backend_nginx justmark0me_backend_nginx:latest
-
 
       - name: Run service
         run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend up -d
