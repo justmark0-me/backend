@@ -29,7 +29,7 @@ jobs:
           docker tag justmark0me_backend_nginx justmark0me_backend_nginx:latest
 
       - name: Check env
-        run: echo $POSTGRES_USER
+        run: printenv POSTGRES_USER
 
       - name: Run service
         run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend up -d
