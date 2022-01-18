@@ -12,11 +12,8 @@ jobs:
     runs-on: [self-hosted, linux, x64]
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
+      - name: Build and start docker image
+        uses: actions/checkout@v2
 
       - name: Stop previous containers
         run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend stop
