@@ -2,10 +2,6 @@
 
 This repository is open source repository of backend part for my site.
 
-## How to start
-TBA
-
-
 ### How to use it
 If you want to make your site, you can fork this repository and modify it for your needs.
 
