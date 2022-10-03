@@ -16,4 +16,4 @@ If you want to make your site, you can fork this repository and modify it for yo
 
 
 ### Contributions
-Contributions are welcome! You can suggest them in github, also if needed you can contact me 😊
+Contributions are welcome! You can suggest them in github, also if needed you can contact me, my active contacts are in my github profile 😊
