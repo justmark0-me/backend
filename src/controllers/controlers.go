@@ -66,7 +66,7 @@ func (c *NewBulkAddIPAddresses) Post() {
 		"New request to add ip addresses. Password request: ",
 		c.GetString("password"),
 		"Actual password: ",
-		os.Getenv("ADMIN_PASSWORD"))
+		os.Getenv("ADMIN_PASSWORD")[0:2]+"...")
 	password := c.GetString("password")
 	if password == "" {
 		c.Ctx.ResponseWriter.WriteHeader(400)

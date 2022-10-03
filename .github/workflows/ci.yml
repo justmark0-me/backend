@@ -29,6 +29,7 @@ jobs:
 
       - name: Run service
         env:
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DBNAME: ${{ secrets.POSTGRES_DBNAME }}
