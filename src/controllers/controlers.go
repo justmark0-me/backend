@@ -4,6 +4,7 @@ import (
 	"log"
 	"main/src/models"
 	"main/src/services"
+	"os"
 	"strings"
 	"time"
 
@@ -61,10 +62,21 @@ func (c *NewRequestController) Get() {
 
 // Post method of add ip addresses endpoint
 func (c *NewBulkAddIPAddresses) Post() {
+	password := c.GetString("password")
+	if password == "" {
+		c.Ctx.ResponseWriter.WriteHeader(400)
+		c.Ctx.WriteString("password is required")
+		return
+	}
+	if password != os.Getenv("ADMIN_PASSWORD") {
+		c.Ctx.ResponseWriter.WriteHeader(403)
+		c.Ctx.WriteString("Wrong admin password")
+		return
+	}
 	allIPStrings := c.GetString("all_ips")
 	if allIPStrings == "" {
 		c.Ctx.ResponseWriter.WriteHeader(400)
-		c.Ctx.WriteString("Send all_ips field")
+		c.Ctx.WriteString("all_ips field is required")
 		return
 	}
 	allIps := strings.Split(allIPStrings, "\n")
