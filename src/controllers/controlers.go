@@ -62,6 +62,11 @@ func (c *NewRequestController) Get() {
 
 // Post method of add ip addresses endpoint
 func (c *NewBulkAddIPAddresses) Post() {
+	log.Println(
+		"New request to add ip addresses. Password request: ",
+		c.GetString("password"),
+		"Actual password: ",
+		os.Getenv("ADMIN_PASSWORD"))
 	password := c.GetString("password")
 	if password == "" {
 		c.Ctx.ResponseWriter.WriteHeader(400)
