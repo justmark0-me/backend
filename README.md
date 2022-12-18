@@ -1,6 +1,6 @@
 # [justmark0.me](https://justmark0.me) backend repo
 
-This repository is open source repository of backend part for my site. (https://api.justmark0.me/)[https://api.justmark0.me/]
+This repository is open source repository of backend part for my site.
 
 
 ### How to use it
