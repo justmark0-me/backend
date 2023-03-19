@@ -1,10 +1,10 @@
 # [justmark0.me](https://justmark0.me) backend repo
 
-This repository is open source repository of backend part for my site.
+This is repo for my personal site.
 
 
-### How to use it
-If you want to make your site, you can fork this repository and modify it for your needs.
+### How to use it.
+If you want the same site. You should fork it then configure secrets of repo, add github runner and start pipeline ☺️ !
 
 ## Local development
 1. You can start development container via `docker-compose up` and need to run all migrations.
