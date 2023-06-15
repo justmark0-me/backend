@@ -16,16 +16,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Stop previous containers
-        run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend stop
+        run: docker stop -f justmark0me_backend
+        continue-on-error: true
 
       - name: Remove old container
-        run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend rm -f
+        run: docker rm -f justmark0me_backend
+        continue-on-error: true
 
-      - name: Build containers
-        run: docker build -t justmark0me_backend -f deploy/go/Dockerfile .  &&
-          docker tag justmark0me_backend justmark0me_backend:latest  &&
-          docker build -t justmark0me_backend_nginx -f deploy/nginx/Dockerfile .  &&
-          docker tag justmark0me_backend_nginx justmark0me_backend_nginx:latest
+      - name: Build container
+        run: docker build -t justmark0me_backend -f Dockerfile .  &&
+          docker tag justmark0me_backend justmark0me_backend:latest
 
       - name: Run service
         env:
@@ -35,7 +35,17 @@ jobs:
           POSTGRES_DBNAME: ${{ secrets.POSTGRES_DBNAME }}
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-        run: docker-compose -f docker-compose.deploy.yml -p justmark0me_backend up -d
-
-#      - name: Test
-#        run: go test -v ./...
+        run: |
+          docker run --detach \
+          --name justmark0me_backend \
+          --env "VIRTUAL_PORT=8080" \
+          --env "VIRTUAL_HOST=api.justmark0.me" \
+          --env "LETSENCRYPT_HOST=api.justmark0.me" \
+          --env "LETSENCRYPT_EMAIL=developer@justmark0.me" \
+          --env "ADMIN_PASSWORD=$ADMIN_PASSWORD" \
+          --env "POSTGRES_USER=$POSTGRES_USER" \
+          --env "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" \
+          --env "POSTGRES_DBNAME=$POSTGRES_DBNAME" \
+          --env "POSTGRES_HOST=$POSTGRES_HOST" \
+          --env "POSTGRES_PORT=$POSTGRES_PORT" \
+          justmark0me_backend:latest 

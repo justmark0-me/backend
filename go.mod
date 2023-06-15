@@ -1,10 +1,10 @@
 module main
 
-go 1.17
+go 1.20
 
 require (
 	github.com/beego/beego/v2 v2.0.1
-	github.com/lib/pq v1.10.4
+	github.com/lib/pq v1.10.6
 )
 
 require (
