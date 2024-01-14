@@ -1,10 +1,9 @@
-package services
+package pkg
 
 import (
 	"encoding/json"
-	"log"
-
-	"github.com/beego/beego/v2/client/httplib"
+	"github.com/pkg/errors"
+	"net/http"
 )
 
 // IPInfo information about ip address
@@ -18,12 +17,15 @@ type IPInfo struct {
 
 // GetIPInfo returns info that were fetched from API about ip that requested something from server
 func GetIPInfo(ip string) (IPInfo, error) {
-	req := httplib.Get("https://ipwhois.app/json/" + ip)
-	body, _ := req.Bytes()
-	data := IPInfo{}
-	err := json.Unmarshal(body, &data)
+	resp, err := http.Get("https://ipwhois.app/json/" + ip)
 	if err != nil {
-		log.Println("Could not map structure and response of get ip info. Error:", err)
+		return IPInfo{}, errors.Wrap(err, "get response from ipwhois.app")
+	}
+
+	var data IPInfo
+	err = json.NewDecoder(resp.Body).Decode(&data)
+	if err != nil {
+		return IPInfo{}, errors.Wrap(err, "unmarshal ip info")
 	}
 	return data, nil
 }

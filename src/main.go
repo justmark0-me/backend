@@ -1,39 +1,51 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"github.com/jackc/pgx/v5"
+	"github.com/pkg/errors"
 	"log"
-	_ "main/src/models"
-	_ "main/src/routers"
+	"main/src/handlers"
+	"net/http"
 	"os"
-
-	"github.com/beego/beego/v2/server/web/filter/cors"
-
-	"github.com/beego/beego/v2/client/orm"
-	"github.com/beego/beego/v2/server/web"
 )
 
 func main() {
-	postgresConnectionSettings := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
-		os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_DBNAME"))
-
-	log.Println(fmt.Sprintf("Connecting to postgres. With user %s on host %s with port %s on database %s",
-		os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_DBNAME")))
-
-	err := orm.RegisterDataBase("default", "postgres", postgresConnectionSettings)
+	ctx := context.Background()
+	// DATABASE_URL example DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+	conn, err := pgx.Connect(ctx, os.Getenv("DATABASE_URL"))
 	if err != nil {
-		log.Fatal("Cannot connect to database.\nQUITTING.\nREASON:", err)
+		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
-	// CORS allow all
-	web.InsertFilter("*", web.BeforeRouter, cors.Allow(&cors.Options{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
-		ExposeHeaders:    []string{"access-token", "Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
-		AllowCredentials: true,
-	}))
+	mux := http.NewServeMux()
 
-	web.Run()
+	backendHandlers := handlers.NewClient(conn)
+	mux.HandleFunc("/monkeytype_background.jpg", backendHandlers.GetMonkeytypeBackground)
+	mux.HandleFunc("/v1/new_request/", backendHandlers.SaveRequest)
+	mux.HandleFunc("/", backendHandlers.GetRootPage)
+
+	handler := corsMiddleware(mux)
+	log.Println("Server starting on port 8080")
+	err = http.ListenAndServe(":8080", handler)
+	if err != nil {
+		panic(errors.Wrap(err, "listen and serve"))
+	}
+}
+
+// corsMiddleware adds CORS headers to the response
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+		// If it's a preflight OPTIONS request, send a 200 response without further processing
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		// Otherwise, pass the request to the next handler
+		next.ServeHTTP(w, r)
+	})
 }
